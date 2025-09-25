@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <title>Classificador Literário</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Classificador de Obras de Arte</h1>
+
+    <p class="descricao">
+      Este é um classificador de Obras de Arte pelo seu movimento literário utilizando Redes Neurais Convolucionais (CNN).
+      Nesse trabalho produzido pela matéria de Inteligência Artifical, nos baseamos no dataset presente em 
+      <a href="https://www.kaggle.com/datasets/steubk/wikiart">DatasetWikiArt</a>
+      que se baseia nas artes advindas do site: 
+      <a href="https://www.wikiart.org">WikiArt</a>
+      que possui mais de 250.000 artes, disponíveis online e acessíveis para qualquer um em qualquer lugar.
+    </p>
+
+    <p class="descricao">
+      Este modelo é capaz de julgar 9 movimentos diferentes, estes são:
+
+      <ul class="descricao">
+        <li>Barroco</li>
+        <li>Cubismo</li>
+        <li>Expressionismo</li>
+        <li>Impressionismo</li>
+        <li>Minimalismo</li>
+        <li>Pós-Impressionismo</li>
+        <li>Realismo</li>
+        <li>Romantismo</li>
+        <li>Simbolismo</li>
+      </ul>
+    </p>
+
+    <p class="descricao">
+      Dessa maneira, esse site é capaz de julgar o movimento artístico de qualquer imagem, predizendo os 3 movimentos que essa imagem mais se aproxima.
+      Siga as instruções abaixo e descubra!
+    </p>
+    
+
+    <div id="drop-area">
+      <p> Arraste e solte aqui a imagem, ou clique para selecionar. </p>
+
+      <input type="file" id="file-input" accept= "image/*" hidden>
+    </div>
+
+    <div class="preview">
+      <img id="imgPreview" alt="Pré-visualização da imagem">
+    </div>
+
+    <input id="btn" type="button" value="Descubra o Movimento!">
+    <div id="out" class="results"></div>
+
+  </div>
+
+    <footer class="footer">
+      <div>
+        Feito com carinho por: Ellen🍄, Silva, Barros e Lóra
+      </div>
+    </footer>
+
+  <div id="resultModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Resultado</h2>
+      <img id="modalImg" src="" alt="preview" />
+      <p id="modalResult"></p>
+    </div>
+  </div>
+
+
+  <script src="script.js" defer></script>
+</body>
+</html>
