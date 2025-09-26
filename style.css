@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
-  background: url(img/artes_schemas.jpg) no-repeat center center fixed; 
+  background: url(./img/artes_schemas.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
