@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const out = document.getElementById("out");
   const dropArea = document.getElementById('drop-area');
   const fileInput = document.getElementById('file-input');
+  const loadingMessage = document.getElementById('loading-message');
 
   // Carregar modelo
   let model;
@@ -21,12 +22,34 @@ document.addEventListener("DOMContentLoaded", () => {
       "Simbolismo"
   ];
 
-  async function loadModel() {
+async function loadModel() {
+  // display da mensagem de loading
+  loadingMessage.style.display = 'block';
+
+  try {
+    // tenta carregar o modelo
     model = await tf.loadGraphModel("model_js_graph/model.json");
     console.log("Modelo carregado com sucesso!");
+
+    // mensagem de sucesso
+    loadingMessage.innerText = '✅ Modelo carregado!';
+
+  } catch (error) {
+    // erro se o carregamento falhar
+    console.error("Falha ao carregar o modelo:", error);
+    loadingMessage.innerText = '❌ Falha ao carregar o modelo.';
+
+  } finally {
+    // O 'finally' executa SEMPRE, com sucesso ou com erro.
+    // Damos 2 segundos para o usuário poder ler a mensagem final.
+    setTimeout(() => {
+      loadingMessage.style.display = 'none';
+    }, 2000);
   }
-  loadModel();
-  console.log("pao")
+}
+
+// inicia o carregamento do modelo
+loadModel();
 
   /*****************************************/
 
