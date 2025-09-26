@@ -119,3 +119,17 @@ input[type="file"] {
   text-align: center;
   padding: 5px;
 }
+
+
+#loading-message {
+  position: fixed; /* Fica fixo na tela */
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 1000; /* Fica na frente de outros elementos */
+  font-family: sans-serif;
+}
