@@ -38,6 +38,7 @@ input[type="file"] {
 }
 
 #drop-area {
+  margin-inline: 20%;
   border: 2px dashed #ccc;
   padding: 20px;
   text-align: center;
