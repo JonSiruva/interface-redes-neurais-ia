@@ -1,15 +1,15 @@
-// Referências
+// Referências dos elementos HTML que serão manipulados
 document.addEventListener("DOMContentLoaded", () => {
-  const filePreview = document.getElementById("file");
-  const btnPrever = document.getElementById("btn");
+  const btnPrever = document.getElementById("btn"); 
   const preview = document.getElementById("imgPreview");
   const out = document.getElementById("out");
   const dropArea = document.getElementById('drop-area');
   const fileInput = document.getElementById('file-input');
   const loadingMessage = document.getElementById('loading-message');
 
-  // Carregar modelo
+  // Armazena o modelo carregado
   let model;
+  // Mapeamento das classes do modelo, na ordem exata do treinamento
   const CLASS_MAP = [
       "Barroco",
       "Cubismo",
@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "Simbolismo"
   ];
 
+// Função para carregar o modelo TensorFlow.js
 async function loadModel() {
   // display da mensagem de loading
   loadingMessage.style.display = 'block';
@@ -40,7 +41,7 @@ async function loadModel() {
     loadingMessage.innerText = '❌ Falha ao carregar o modelo.';
 
   } finally {
-    // O 'finally' executa SEMPRE, com sucesso ou com erro.
+    // finally sempre executa, com sucesso ou com erro.
     // Damos 2 segundos para o usuário poder ler a mensagem final.
     setTimeout(() => {
       loadingMessage.style.display = 'none';
@@ -58,18 +59,19 @@ loadModel();
     e.preventDefault();
     e.stopPropagation();
   }
-  
+  // eventos para a área de drop
   ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
     dropArea.addEventListener(eventName, preventDefaults, false);
   });
 
-// pra deixar bonito
+// muda o estilo da área de drop quando o arquivo está sobre ela
 ["dragenter", "dragover"].forEach(eventName => {
   dropArea.addEventListener(eventName, () => {
     dropArea.style.backgroundColor = "#f0f0f0";
   });
 });
 
+// restaura o estilo quando o arquivo sai da área de drop
 ["dragleave", "drop"].forEach(eventName => {
   dropArea.addEventListener(eventName, () => {
     dropArea.style.backgroundColor = "transparent";
@@ -85,14 +87,17 @@ function handleDrop(e) {
   processFile(files[0]);
 }
 
+// abre o seletor de arquivos ao clicar na área de drop
 dropArea.addEventListener('click', () => {
   fileInput.click();
 })
 
+// quando seleciona o arquivo no seletor
 fileInput.addEventListener("change", e => {
   processFile(e.target.files[0]);
 });
 
+// processa o arquivo selecionado ou dropado
 function processFile(file) {
   if (file) {
     const reader = new FileReader();
@@ -124,16 +129,15 @@ btnPrever.addEventListener("click", async () => {
     const originalTensor = tf.browser.fromPixels(preview);
     const [height, width] = originalTensor.shape;
 
-    // Calcula os parâmetros para o corte (crop) quadrado aleatório
+    // Corta a imagem para um quadrado central
     let cropSize = Math.min(height, width);
-    // Calcula o ponto de início para centralizar o crop
     let startY = Math.floor((height - cropSize) / 2);
     let startX = Math.floor((width - cropSize) / 2);
 
     // Corta o tensor para criar um quadrado
     const cropped = tf.slice(originalTensor, [startY, startX, 0], [cropSize, cropSize, 3]);
 
-    // Redimensiona o quadrado cortado para o tamanho esperado pelo modelo (255x255)
+    // Redimensiona o quadrado cortado para o tamanho esperado pelo modelo
     const resized = tf.image.resizeNearestNeighbor(cropped, [128, 128]);
 
     // Normaliza os pixels e adiciona a dimensão do batch
@@ -145,12 +149,12 @@ btnPrever.addEventListener("click", async () => {
 
     
     // Pega top 3
-    const pairs = Array.from(probs)
-        .map((p, i) => ({ i, p }))
-        .sort((a, b) => b.p - a.p)
-        .slice(0, 3);
+    const pairs = Array.from(probs) // Converte o resultado em um array JS.
+        .map((p, i) => ({ i, p })) // Mapeia para objetos {índice, probabilidade}.
+        .sort((a, b) => b.p - a.p) // Ordena em ordem decrescente de probabilidade.
+        .slice(0, 3); // Pega apenas os 3 primeiros (top 3).
 
-    // Mostrar resultados
+    // Mostra resultados
     out.innerHTML =
         "<h2>Resultado da classificação</h2>" +
         pairs
@@ -160,16 +164,15 @@ btnPrever.addEventListener("click", async () => {
             )
             .join("");
 
+    // mostra o resultado principal no modal
     const topResult = CLASS_MAP[pairs[0].i];
     const topProb = (pairs[0].p * 100).toFixed(2);
 
     document.getElementById("modalImg").src = preview.src;
-    document.getElementById("modalResult").textContent =
-        `${topResult} — ${topProb}%`;
-
+    document.getElementById("modalResult").textContent =`${topResult} — ${topProb}%`;
     document.getElementById("resultModal").style.display = "flex";
 
-    // liberar memória (importante adicionar os novos tensores)
+    // libera a memória alocada para os tensores
     originalTensor.dispose();
     cropped.dispose();
     resized.dispose();
@@ -177,12 +180,12 @@ btnPrever.addEventListener("click", async () => {
     preds.dispose();
 });
 
-// fecha modal
+// fecha modal pelo botão de fechar
 document.querySelector(".close").addEventListener("click", () => {
   document.getElementById("resultModal").style.display = "none";
 });
 
-// fecha modal
+// fecha modal clicando fora do conteúdo
 window.addEventListener("click", (e) => {
   if (e.target.id === "resultModal") {
     document.getElementById("resultModal").style.display = "none";
