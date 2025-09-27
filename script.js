@@ -134,16 +134,16 @@ btnPrever.addEventListener("click", async () => {
     const cropped = tf.slice(originalTensor, [startY, startX, 0], [cropSize, cropSize, 3]);
 
     // Redimensiona o quadrado cortado para o tamanho esperado pelo modelo (255x255)
-    const resized = tf.image.resizeNearestNeighbor(cropped, [255, 255]);
+    const resized = tf.image.resizeNearestNeighbor(cropped, [128, 128]);
 
     // Normaliza os pixels e adiciona a dimensão do batch
     const normalized = resized.toFloat().div(255.0).expandDims(0);
-
 
     // Predição
     const preds = model.predict(normalized);
     const probs = await preds.data();
 
+    
     // Pega top 3
     const pairs = Array.from(probs)
         .map((p, i) => ({ i, p }))
